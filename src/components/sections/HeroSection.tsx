@@ -1,0 +1,213 @@
+﻿import { motion } from "framer-motion";
+import { Github, Linkedin, Mail, Phone, Download, Code, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import BubbleBackground from "../effects/BubbleBackground";
+import profileImage from "@/assets/profile.jpg";
+
+import { useState, useEffect } from "react";
+
+const useTypewriter = (text: string, speed: number = 50, delay: number = 0) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    let charIndex = 0;
+
+    const startTyping = () => {
+      timeout = setTimeout(() => {
+        if (charIndex < text.length) {
+          setDisplayedText(text.slice(0, charIndex + 1));
+          charIndex++;
+          startTyping();
+        } else {
+          setIsComplete(true);
+        }
+      }, speed);
+    };
+
+    const delayTimeout = setTimeout(startTyping, delay);
+
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(delayTimeout);
+    };
+  }, [text, speed, delay]);
+
+  return { displayedText, isComplete };
+};
+
+const TypewriterText = ({
+  text,
+  className,
+  speed = 50,
+  delay = 0,
+  showCursor = true,
+}: {
+  text: string;
+  className?: string;
+  speed?: number;
+  delay?: number;
+  showCursor?: boolean;
+}) => {
+  const { displayedText, isComplete } = useTypewriter(text, speed, delay);
+
+  return (
+    <span className={className}>
+      {displayedText}
+      {showCursor && (
+        <span
+          className={`inline-block w-0.5 h-[1em] bg-primary ml-1 align-middle ${
+            isComplete ? "animate-pulse" : ""
+          }`}
+        />
+      )}
+    </span>
+  );
+};
+
+const HeroSection = () => {
+  const handleDownloadResume = () => {
+    const link = document.createElement("a");
+    link.href = "/resume.pdf";
+    link.download = "Shivendra_Keshari_Resume.pdf";
+    link.click();
+  };
+
+  const socialLinks = [
+    { icon: Github, href: "https://github.com/Shivendra-11", label: "GitHub" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/shivendra-keshari-46aa67256/", label: "LinkedIn" },
+    { icon: Phone, href: "tel:+916391048681", label: "Phone" },
+    { icon: Mail, href: "mailto:shivendrakeshari11@gmail.com", label: "Email" },
+  ];
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      <BubbleBackground />
+
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background z-[1]" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
+          {/* Left Column */}
+          <div className="text-center lg:text-left order-2 lg:order-1">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8"
+            >
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+              </span>
+              <span className="text-sm text-muted-foreground font-medium">Available for opportunities</span>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight font-display">
+                <span className="gradient-text">
+                  <TypewriterText text="Hi, I'm Shivendra Keshari" speed={60} showCursor={false} />
+                </span>
+              </h1>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.5 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/80 mb-6"
+            >
+              <Code className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-foreground">Full-Stack Developer</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 1.8 }}
+              className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed"
+            >
+              <TypewriterText
+                text="B.Tech CSE student at KIET, Ghaziabad. I build scalable web applications with React, Node.js, and modern tooling (Next.js, TypeScript, Redis), focusing on clean UX and performance."
+                speed={30}
+                delay={2000}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10"
+            >
+              <Link
+                to="/projects"
+                className="w-full sm:w-auto group px-6 py-3.5 rounded-xl btn-premium text-primary-foreground font-semibold flex items-center justify-center gap-2"
+              >
+                View Projects
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <button
+                onClick={handleDownloadResume}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl btn-outline-premium text-foreground font-semibold flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Download Resume
+              </button>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.1 }}
+              className="flex items-center justify-center lg:justify-start gap-3"
+            >
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-xl glass-card text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-5 h-5" />
+                </motion.a>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Right Column - Profile Picture */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            className="order-1 lg:order-2 flex justify-center"
+          >
+            <div className="relative">
+              <div className="absolute -inset-3 rounded-full hero-gradient-ring">
+                <div className="w-full h-full rounded-full bg-background" />
+              </div>
+
+              <div className="absolute inset-0 rounded-full blur-2xl opacity-20 hero-glow-primary" />
+
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden border-4 border-background shadow-premium">
+                <img
+                  src={profileImage}
+                  alt="Shivendra Keshari"
+                  className="w-full h-full object-cover object-center scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default HeroSection;

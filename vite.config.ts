@@ -1,0 +1,24 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+import { componentTagger } from "lovable-tagger";
+
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => ({
+  server: {
+    host: "::",
+    port: 8080,
+  },
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  // In dev, serve at '/' to avoid confusing base-path warnings.
+  // In production (e.g., GitHub Pages project site), serve under a sub-path.
+  base:
+    mode === "development"
+      ? "/"
+      : (process.env.VITE_BASE_PATH || "/Portfolio_website/").replace(/\/?$/, "/"),
+}));
