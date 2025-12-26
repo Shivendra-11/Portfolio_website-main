@@ -16,9 +16,9 @@ export default defineConfig(({ mode }) => ({
     },
   },
   // In dev, serve at '/' to avoid confusing base-path warnings.
-  // In production (e.g., GitHub Pages project site), serve under a sub-path.
+  // In production, default to '/' (Vercel). Override with VITE_BASE_PATH for sub-path deploys.
   base:
     mode === "development"
       ? "/"
-      : (process.env.VITE_BASE_PATH || "/Portfolio_website/").replace(/\/?$/, "/"),
+      : (process.env.VITE_BASE_PATH || "/").replace(/\/?$/, "/"),
 }));
